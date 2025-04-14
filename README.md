@@ -1,2 +1,52 @@
-# QuickFIMChecker
-Easy to setup and use File Integrity Monitor
+File integrity monitor for windows environment that tracks hash changes on files.
+
+Detects who modified, created or deleted a file.
+
+Includes timestamp for when file was modified.
+
+Sends an email detailing results of scan.
+
+
+Example:
+
+How to use:
+1. Create a baseline scan of the directory you want to scan for changes.
+BaselineGenerator.py
+
+note* - Modify the Configuration section to your desired scan directory:
+
+# === Configuration ===
+MONITOR_PATH = r"C:\users\User1\downloads"
+BASELINE_OUTPUT = "C:\QuickFIMChecker\baseline.json"
+LOG_FILE = "fim_baseline.log"
+
+2. Copy the baseline.json file that is created to directory C:\FIM to run the program.
+
+3. (optional) Edit EncryptPW.py with your email password under:
+
+# Encrypt the password
+f = Fernet(key)
+encrypted_password = f.encrypt(b"YOUREMAILPASSWORDHERE")
+
+Run EncryptPW.py to generate a secret.key / encrypted_password.bin file for your email
+credentials.
+
+4. Update FIM-Compare-Secure.py
+ Constants section: # Constants
+MONITOR_FOLDER = r"C:\users\rjohnson\downloads"
+BASELINE_FILE = r"C:\QuickFIMChecker\baseline.json"
+LAST_RUN_FILE = r"C:\QuickFIMChecker\last_run.json"
+CHANGES_FILE = r"C:\QuickFIMChecker\changes.json"
+LOG_FILE = r"C:\QuickFIMChecker\fim.log"
+
+
+ Email Config section:
+# Email config
+EMAIL_ENABLED = True
+SMTP_SERVER = "smtp.office365.com"
+SMTP_PORT = 587
+EMAIL_SENDER = "you@mycompany.com"
+EMAIL_PASSWORD = f.decrypt(encrypted_password).decode()
+EMAIL_RECIPIENTS = ["user1@mycompany.com", "user2@mycompany.com"]
+
+5. Run QuickFIMChecker.py to output results. *Note each run will only track changes since previous run.
